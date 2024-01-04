@@ -11,7 +11,7 @@ namespace EnumSelectionFactory.Enums
                 EnumSelectionFactoryTests.EnumTest.None => nameof(EnumSelectionFactoryTests.EnumTest.None),
                 EnumSelectionFactoryTests.EnumTest.Test => nameof(EnumSelectionFactoryTests.EnumTest.Test),
                 _ => value.ToString()
-                };
+            };
         }
         
         public static EnumSelectionFactoryTests.EnumTest[] GetValues()
@@ -20,6 +20,16 @@ namespace EnumSelectionFactory.Enums
             {
                 EnumSelectionFactoryTests.EnumTest.None,
                 EnumSelectionFactoryTests.EnumTest.Test,
+            };
+        }
+        
+        public static string ToDisplayName(this EnumSelectionFactoryTests.EnumTest value)
+        {
+            return value switch
+            {
+                EnumSelectionFactoryTests.EnumTest.None => "",
+                EnumSelectionFactoryTests.EnumTest.Test => "test",
+                _ => value.ToString()
             };
         }
     }

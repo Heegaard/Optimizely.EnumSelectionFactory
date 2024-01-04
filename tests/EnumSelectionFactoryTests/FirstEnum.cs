@@ -4,12 +4,12 @@ using System.ComponentModel.DataAnnotations;
 namespace EnumSelectionFactoryTests
 {
     [EnumExtension]
-    public enum EnumTest
+    public enum FirstEnum
     {
         [Display(Name = "None", ShortName = "")]
         None = 0,
 
-        [Display(Name = "Test", ShortName = "test")]
-        Test = 1
+        [Display(Name = "First", ShortName = "first")]
+        First = 1
     }
 }

@@ -22,31 +22,77 @@ internal sealed partial class Emitter
                     .Line("return value switch")
                     .Line("{")
                     .Tab()
-                    .Foreach(enumTemplate.Values, (b, c) => b.Line($"{enumTemplate.FullName}.{c} => nameof({enumTemplate.FullName}.{c}),"))
+                    .Foreach(enumTemplate.Values, (b, c) => b.Line($"{enumTemplate.FullName}.{c.Value} => nameof({enumTemplate.FullName}.{c.Value}),"))
                     .Line("_ => value.ToString()")
-                    .Line("};"))
-                    .NewLine()
+                    .Tab(-1)
+                    .Line("};")
+                    )
+                .NewLine()
                 .Method($"public static {enumTemplate.FullName}[] GetValues()", methodBuilder => methodBuilder
-                .Tab()
-                .Line("return new[]")
-                .Line("{")
-                .Tab()
-                .Foreach(enumTemplate.Values, (b, c) => b.Line($"{enumTemplate.FullName}.{c},"))
-                .Tab(-1)
-                .Line("};")
-                )
+                    .Tab()
+                    .Line("return new[]")
+                    .Line("{")
+                    .Tab()
+                    .Foreach(enumTemplate.Values, (b, c) => b.Line($"{enumTemplate.FullName}.{c.Value},"))
+                    .Tab(-1)
+                    .Line("};")
+                    )
+                .NewLine()
+                .Method($"public static string ToDisplayName(this {enumTemplate.FullName} value)", methodBuilder => methodBuilder
+                    .Tab()
+                    .Line("return value switch")
+                    .Line("{")
+                    .Tab()
+                    .Foreach(enumTemplate.Values, (b, c) => b.Line($"{enumTemplate.FullName}.{c.Value} => \"{c.Name}\","))
+                    .Line("_ => value.ToString()")
+                    .Tab(-1)
+                    .Line("};")
+                    )
                 .Build();
         }
-    }
 
-    //public static Olympus.Shared.Content.Enums.SiteEnum[] GetValues()
-    //{
-    //    return new[]
-    //    {
-    //            Olympus.Shared.Content.Enums.SiteEnum.Unknown,
-    //            Olympus.Shared.Content.Enums.SiteEnum.Poseidon,
-    //        };
-    //}
+        yield return new($"SharedEnumExtension.g.cs", CreateSharedEnumExtension());
+
+        string CreateSharedEnumExtension() =>
+                CSharpCodeBuilder.Create()
+                .Namespace($"{SharedNamespace}.Enums")
+                .Class($"public static partial class SharedEnumExtension")
+                .Tab()
+                .NewLine()
+                .Method($"public static string ToStringFast(this Enum value)", methodBuilder => methodBuilder
+                    .Tab()
+                    .Line("return value switch")
+                    .Line("{")
+                    .Tab()
+                    .Foreach(enums, (b, c) => b.Line($"{c.FullName} propertyEnum => propertyEnum.ToStringFast(),"))
+                    .Line("_ => value.ToString()")
+                    .Tab(-1)
+                    .Line("};")
+                    )
+                .NewLine()
+                .Method($"public static Enum[] GetValues(this Enum value)", methodBuilder => methodBuilder
+                    .Tab()
+                    .Line("return value switch")
+                    .Line("{")
+                    .Tab()
+                    .Foreach(enums, (b, c) => b.Line($"{c.FullName} propertyEnum => propertyEnum.GetValues(),"))
+                    .Line("_ => new Enum[0]")
+                    .Tab(-1)
+                    .Line("};")
+                    )
+                .NewLine()
+                .Method($"public static string ToDisplayName(this Enum value)", methodBuilder => methodBuilder
+                    .Tab()
+                    .Line("return value switch")
+                    .Line("{")
+                    .Tab()
+                    .Foreach(enums, (b, c) => b.Line($"{c.FullName} propertyEnum => propertyEnum.ToDisplayName(),"))
+                    .Line("_ => value.ToString()")
+                    .Tab(-1)
+                    .Line("};")
+                    )
+                .Build();
+    }
 
     internal IEnumerable<CodeSource> GetTest(string sharedNamespace)
     {
