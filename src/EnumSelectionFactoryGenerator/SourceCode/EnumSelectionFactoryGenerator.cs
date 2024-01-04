@@ -3,6 +3,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
 using System.Collections.Immutable;
+using System.ComponentModel;
 using System.Text;
 
 namespace EnumSelectionFactoryGenerator.SourceCode;
@@ -151,14 +152,29 @@ internal sealed partial class EnumSelectionFactoryGenerator : IIncrementalGenera
 
             // Get all the members in the enum
             ImmutableArray<ISymbol> enumMembers = enumSymbol.GetMembers();
-            var members = new List<string>(enumMembers.Length);
+            var members = new List<EnumMember>();
 
             // Get all the fields from the enum, and add their name to the list
             foreach (ISymbol member in enumMembers)
             {
+                var attributes = member.GetAttributes();
+
+
                 if (member is IFieldSymbol field && field.ConstantValue is not null)
                 {
-                    members.Add(member.Name);
+                    foreach (var item in attributes)
+                    {
+                        if (item.AttributeClass.Name.Equals("DisplayAttribute"))
+                        {
+                            var tester = item.NamedArguments.FirstOrDefault(x => x.Key.Equals("ShortName")).Value.Value as string;
+                            members.Add(new(tester, member.Name));
+                        }
+                        else
+                        {
+                            members.Add(new("Fejl", member.Name));
+
+                        }
+                    }
                 }
             }
 
