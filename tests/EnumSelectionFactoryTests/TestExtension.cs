@@ -1,4 +1,6 @@
-﻿//namespace EnumSelectionFactory.Enums;
+﻿//using EnumSelectionFactoryTests;
+
+//namespace EnumSelectionFactory.Enums;
 
 //public static partial class TestExtension
 //{
@@ -12,5 +14,10 @@
 //            _ => value.ToString()
 
 //        };
+//    }
+
+//    public static Enum[] ToStringFast()
+//    {
+//        return new Enum[0];
 //    }
 //}
