@@ -14,7 +14,7 @@
 	<!-- NuGet properties -->
 	<PropertyGroup>
 		<Authors>Dennis Heegaard</Authors>
-		<Version>0.0.1</Version>
+		<Version>0.1.2</Version>
 		<SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
 		<PackageId>EnumSelectionFactoryGenerator</PackageId>
 		<PackRelease>true</PackRelease>

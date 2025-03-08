@@ -10,6 +10,7 @@ internal sealed partial class Emitter
         foreach (var enumTemplate in enums)
         {
             yield return new($"{enumTemplate.Name}SelectionFactory.g.cs", CreateSelectionFactory());
+            yield return new($"{enumTemplate.Name}DisplaySelectionFactory.g.cs", CreateDisplaySelectionFactory());
 
             string CreateSelectionFactory() =>
                 CSharpCodeBuilder.Create()
@@ -26,6 +27,26 @@ internal sealed partial class Emitter
                     .Line("{")
                     .Tab()
                     .Line("yield return new SelectItem { Value = item, Text = item.ToStringFast() };")
+                    .Tab(-1)
+                    .Line("}")
+                    )
+                .Build();
+
+            string CreateDisplaySelectionFactory() =>
+                CSharpCodeBuilder.Create()
+                .Using("EPiServer.Shell.ObjectEditing")
+                .Using($"{sharedNamespace}.Enums")
+                .Namespace($"{sharedNamespace}.SelectionFactories")
+                .Class($"public class {enumTemplate.Name}DisplaySelectionFactory : ISelectionFactory")
+                .Tab()
+                .NewLine()
+                .Method($"public IEnumerable<ISelectItem> GetSelections(ExtendedMetadata metadata)", methodBuilder => methodBuilder
+                    .Tab()
+                    .Line($"var enumValues = {enumTemplate.Name}Extension.GetValues();")
+                    .Line("foreach (var item in enumValues)")
+                    .Line("{")
+                    .Tab()
+                    .Line("yield return new SelectItem { Value = item, Text = item.ToDisplayName() };")
                     .Tab(-1)
                     .Line("}")
                     )
