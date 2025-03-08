@@ -3,7 +3,6 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
 using System.Collections.Immutable;
-using System.ComponentModel;
 using System.Text;
 
 namespace EnumSelectionFactoryGenerator.SourceCode;
@@ -162,19 +161,24 @@ internal sealed partial class EnumSelectionFactoryGenerator : IIncrementalGenera
 
                 if (member is IFieldSymbol field && field.ConstantValue is not null)
                 {
-                    foreach (var item in attributes)
+                    if (attributes.Any())
                     {
-                        if (item.AttributeClass.Name.Equals("DisplayAttribute"))
+                        foreach (var item in attributes)
                         {
-                            var tester = item.NamedArguments.FirstOrDefault(x => x.Key.Equals("ShortName")).Value.Value as string;
-                            members.Add(new(tester, member.Name));
-                        }
-                        else
-                        {
-                            members.Add(new("Fejl", member.Name));
+                            if (item.AttributeClass.Name.Equals("DisplayAttribute"))
+                            {
+                                var displayName = item.NamedArguments.FirstOrDefault(x => x.Key.Equals("Name")).Value.Value as string;
+                                var displayShortName = item.NamedArguments.FirstOrDefault(x => x.Key.Equals("ShortName")).Value.Value as string;
 
+                                members.Add(new(displayName, displayShortName, member.Name));
+                            }
                         }
                     }
+                    else
+                    {
+                        members.Add(new(null, null, member.Name));
+                    }
+
                 }
             }
 

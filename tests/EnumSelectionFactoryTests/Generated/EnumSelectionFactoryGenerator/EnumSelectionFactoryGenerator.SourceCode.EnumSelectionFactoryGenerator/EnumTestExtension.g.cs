@@ -27,6 +27,15 @@ namespace EnumSelectionFactory.Enums
         {
             return value switch
             {
+                EnumSelectionFactoryTests.EnumTest.None => "None",
+                EnumSelectionFactoryTests.EnumTest.Test => "Test",
+                _ => value.ToString()
+            };
+        }
+        public static string ToDisplayShortName(this EnumSelectionFactoryTests.EnumTest value)
+        {
+            return value switch
+            {
                 EnumSelectionFactoryTests.EnumTest.None => "",
                 EnumSelectionFactoryTests.EnumTest.Test => "test",
                 _ => value.ToString()

@@ -33,5 +33,14 @@ namespace EnumSelectionFactory.Enums
                 _ => value.ToString()
             };
         }
+        public static string ToDisplayShortName(this Enum value)
+        {
+            return value switch
+            {
+                EnumSelectionFactoryTests.EnumTest propertyEnum => propertyEnum.ToDisplayShortName(),
+                EnumSelectionFactoryTests.FirstEnum propertyEnum => propertyEnum.ToDisplayShortName(),
+                _ => value.ToString()
+            };
+        }
     }
 }

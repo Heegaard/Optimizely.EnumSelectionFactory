@@ -16,12 +16,14 @@ public readonly struct EnumTemplate
 
 public readonly struct EnumMember
 {
-    public readonly string Name;
+    public readonly string? Name;
+    public readonly string? ShortName;
     public readonly string Value;
 
-    public EnumMember(string name, string value)
+    public EnumMember(string? name, string? shortName, string value)
     {
         Name = name;
+        ShortName = shortName;
         Value = value;
     }
 }

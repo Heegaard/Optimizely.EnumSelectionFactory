@@ -27,8 +27,13 @@ namespace EnumSelectionFactory.Enums
         {
             return value switch
             {
-                EnumSelectionFactoryTests.FirstEnum.None => "",
-                EnumSelectionFactoryTests.FirstEnum.First => "first",
+                _ => value.ToString()
+            };
+        }
+        public static string ToDisplayShortName(this EnumSelectionFactoryTests.FirstEnum value)
+        {
+            return value switch
+            {
                 _ => value.ToString()
             };
         }
